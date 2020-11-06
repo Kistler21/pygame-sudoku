@@ -1,5 +1,5 @@
 import unittest
-from solver import Cell
+from solver import Cell, Sudoku
 
 
 class TestCell(unittest.TestCase):
@@ -31,4 +31,19 @@ class TestCell(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    board = [
+        [0, 0, 0, 9, 0, 0, 0, 3, 0],
+        [3, 0, 6, 0, 2, 0, 0, 4, 0],
+        [2, 0, 4, 0, 0, 3, 1, 0, 6],
+        [0, 7, 0, 0, 5, 1, 0, 8, 0],
+        [0, 3, 1, 0, 6, 0, 0, 5, 7],
+        [5, 0, 9, 0, 0, 0, 6, 0, 0],
+        [4, 1, 0, 0, 0, 2, 0, 7, 8],
+        [7, 6, 3, 0, 0, 5, 4, 0, 0],
+        [9, 2, 8, 0, 0, 4, 0, 0, 1]
+    ]
+s = Sudoku(board)
+print(s)
+print(s.solve())
+print(s)
