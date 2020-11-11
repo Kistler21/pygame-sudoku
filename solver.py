@@ -160,10 +160,7 @@ class Sudoku:
         # Create list of open squares
         self.board = [[Cell(row, col) for col in range(9)] for row in range(9)]
 
-        open_positions = []
-        for row in range(9):
-            for col in range(9):
-                open_positions.append(str(row) + str(col))
+        open_positions = [spot for spot in range(81)]
 
         # Shuffle open_positions so order is random
         random.seed()
@@ -173,8 +170,8 @@ class Sudoku:
         while len(open_positions) > 0:
             # Get random empty cell
             spot_to_fill = open_positions.pop()
-            row = int(spot_to_fill[0])
-            col = int(spot_to_fill[1])
+            row = spot_to_fill // 9
+            col = spot_to_fill % 9
             cell = self.board[row][col]
 
             # Make random move for cell unitl valid move is made
@@ -183,7 +180,7 @@ class Sudoku:
             while True:
                 num = moves.pop()
                 cell.value = num
-                if self.test_solve():
+                if len(moves) == 0 or self.test_solve():
                     break
 
     def get_board(self):
