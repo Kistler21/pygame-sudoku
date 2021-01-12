@@ -76,7 +76,7 @@ if __name__ == '__main__':
         [8, 0, 0, 0, 2, 5, 4, 0, 6],
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
-    s = Sudoku(test)
+    s = Sudoku(evil)
     print(s)
     print(s.solve())
     print(s)

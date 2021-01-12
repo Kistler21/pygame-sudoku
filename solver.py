@@ -174,7 +174,7 @@ class Sudoku:
             col = spot_to_fill % 9
             cell = self.board[row][col]
 
-            # Make random move for cell unitl valid move is made
+            # Make random move for cell until valid move is made
             moves = self.get_possible_moves(cell)
             random.shuffle(moves)
             while True:
@@ -201,23 +201,23 @@ class Sudoku:
 
     def __str__(self):
         '''Returns a string representing the board.'''
-        board = ''
+        board = ' -----------------------\n'
         for row, line in enumerate(self.board):
+            board += '|'
             for col, cell in enumerate(line):
                 if cell.value == None:
-                    val = ' '
+                    val = '-'
                 else:
                     val = cell.value
                 if col < 8:
-                    board += f' {val} |'
-                    if (col + 1) % 3 == 0:
-                        board += '|'
-                else:
                     board += f' {val}'
-            if row < 8:
-                board += '\n---|---|---||---|---|---||---|---|---\n'
-                if (row + 1) % 3 == 0:
-                    board += '---|---|---||---|---|---||---|---|---\n'
+                    if (col + 1) % 3 == 0:
+                        board += ' |'
+                else:
+                    board += f' {val} |\n'
+            if row < 8 and (row + 1) % 3 == 0:
+                board += '|-------|-------|-------|\n'
+        board += ' -----------------------\n'
         return board
 
 
