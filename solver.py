@@ -1,5 +1,4 @@
 import random
-import time
 
 
 class Cell:
@@ -48,7 +47,7 @@ class Cell:
     @value.setter
     def value(self, value):
         '''Setter method for value.'''
-        if value != None and (value < 1 or value > 9):
+        if value is not None and (value < 1 or value > 9):
             raise AttributeError('Value must be between 1 and 9.')
         else:
             self._value = value
@@ -59,7 +58,7 @@ class Sudoku:
 
     def __init__(self, board=None):
         '''Initializes an instance of a Sudoku game.'''
-        if board == None:
+        if board is None:
             self.generate_board()
         else:
             self.board = []
@@ -119,7 +118,7 @@ class Sudoku:
         '''Returns an empty cell. Returns False if all cells are filled in.'''
         for row in range(9):
             for col in range(9):
-                if self.board[row][col].value == None:
+                if self.board[row][col].value is None:
                     return self.board[row][col]
 
         return False
@@ -146,7 +145,7 @@ class Sudoku:
             cell.value = val
 
             # If all recursive calls return True then board is solved
-            if self.solve() == True:
+            if self.solve():
                 return True
 
             # Undo move is solve was unsuccessful
@@ -205,7 +204,7 @@ class Sudoku:
         for row, line in enumerate(self.board):
             board += '|'
             for col, cell in enumerate(line):
-                if cell.value == None:
+                if cell.value is None:
                     val = '-'
                 else:
                     val = cell.value
