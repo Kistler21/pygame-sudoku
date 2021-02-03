@@ -83,18 +83,22 @@ class Sudoku:
         '''Returns whether a number is a valid move for a cell.'''
         # Check if the number is valid for the row
         for col in range(9):
-            if self.board[cell.row][col].value == num:
+            if self.board[cell.row][col].value == num and col != cell.col:
                 return False
 
         # Check if the number is valid for the column
         for row in range(9):
-            if self.board[row][cell.col].value == num:
+            if self.board[row][cell.col].value == num and row != cell.row:
                 return False
 
         # Check if the number is valid in its box
         for row in range(cell.row // 3 * 3, cell.row // 3 * 3 + 3):
             for col in range(cell.col // 3 * 3, cell.col // 3 * 3 + 3):
-                if self.board[row][col].value == num:
+                if (
+                    self.board[row][col].value == num
+                    and row != cell.row
+                    and col != cell.col
+                ):
                     return False
 
         # Move is valid

@@ -16,7 +16,8 @@ size = width, height
 white = 255, 255, 255
 black = 0, 0, 0
 gray = 200, 200, 200
-green = 0, 128, 0
+green = 0, 175, 0
+red = 200, 0, 0
 
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Sudoku')
@@ -101,12 +102,23 @@ def fill_cells(cells, board):
         for col in range(9):
             if board.board[row][col].value is None:
                 continue
+
+            # Fill in given values
             if not board.board[row][col].editable:
                 font.bold = True
                 text = font.render(f'{board.board[row][col].value}', 1, black)
+
+            # Fill in values entered by user
             else:
                 font.bold = False
-                text = font.render(f'{board.board[row][col].value}', 1, green)
+                if board.check_move(board.board[row][col], board.board[row][col].value):
+                    text = font.render(
+                        f'{board.board[row][col].value}', 1, green)
+                else:
+                    text = font.render(
+                        f'{board.board[row][col].value}', 1, red)
+
+            # Center text in cell
             xpos, ypos = cells[row][col].center
             textbox = text.get_rect(center=(xpos, ypos))
             screen.blit(text, textbox)
@@ -154,29 +166,28 @@ def play():
                 if active_cell is not None:
 
                     # Input number based on key press
-                    if event.key == pygame.K_0:
+                    if event.key == pygame.K_0 or event.key == pygame.K_KP0:
                         game.board[active_cell.row][active_cell.col].value = 0
-                    if event.key == pygame.K_1:
+                    if event.key == pygame.K_1 or event.key == pygame.K_KP1:
                         game.board[active_cell.row][active_cell.col].value = 1
-                    if event.key == pygame.K_2:
+                    if event.key == pygame.K_2 or event.key == pygame.K_KP2:
                         game.board[active_cell.row][active_cell.col].value = 2
-                    if event.key == pygame.K_3:
+                    if event.key == pygame.K_3 or event.key == pygame.K_KP3:
                         game.board[active_cell.row][active_cell.col].value = 3
-                    if event.key == pygame.K_4:
+                    if event.key == pygame.K_4 or event.key == pygame.K_KP4:
                         game.board[active_cell.row][active_cell.col].value = 4
-                    if event.key == pygame.K_5:
+                    if event.key == pygame.K_5 or event.key == pygame.K_KP5:
                         game.board[active_cell.row][active_cell.col].value = 5
-                    if event.key == pygame.K_6:
+                    if event.key == pygame.K_6 or event.key == pygame.K_KP6:
                         game.board[active_cell.row][active_cell.col].value = 6
-                    if event.key == pygame.K_7:
+                    if event.key == pygame.K_7 or event.key == pygame.K_KP7:
                         game.board[active_cell.row][active_cell.col].value = 7
-                    if event.key == pygame.K_8:
+                    if event.key == pygame.K_8 or event.key == pygame.K_KP8:
                         game.board[active_cell.row][active_cell.col].value = 8
-                    if event.key == pygame.K_9:
+                    if event.key == pygame.K_9 or event.key == pygame.K_KP9:
                         game.board[active_cell.row][active_cell.col].value = 9
-
-                    # Deselect cell
-                    active_cell = None
+                    if event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE:
+                        game.board[active_cell.row][active_cell.col].value = None
 
         screen.fill(white)
         draw_grid()
