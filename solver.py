@@ -64,20 +64,17 @@ class Sudoku:
 
     def __init__(self, board=None):
         '''Initializes an instance of a Sudoku game.'''
-        if board is None:
-            self.generate_board()
-        else:
-            self.board = []
-            for row in range(9):
-                self.board.append([])
-                for col in range(9):
-                    if board[row][col] == 0:
-                        val = None
-                        editable = True
-                    else:
-                        val = board[row][col]
-                        editable = False
-                    self.board[row].append(Cell(row, col, val, editable))
+        self.board = []
+        for row in range(9):
+            self.board.append([])
+            for col in range(9):
+                if board[row][col] == 0:
+                    val = None
+                    editable = True
+                else:
+                    val = board[row][col]
+                    editable = False
+                self.board[row].append(Cell(row, col, val, editable))
 
     def check_move(self, cell, num):
         '''Returns whether a number is a valid move for a cell.'''
@@ -165,35 +162,6 @@ class Sudoku:
 
         # No moves were successful
         return False
-
-    def generate_board(self):
-        '''Generates a random, solvable game of Sudoku.'''
-        # Create list of open squares
-        self.board = [[Cell(row, col, None, True)
-                       for col in range(9)] for row in range(9)]
-
-        open_positions = [spot for spot in range(81)]
-
-        # Shuffle open_positions so order is random
-        random.seed()
-        random.shuffle(open_positions)
-
-        # Put random numbers into board until is it full
-        while len(open_positions) > 0:
-            # Get random empty cell
-            spot_to_fill = open_positions.pop()
-            row = spot_to_fill // 9
-            col = spot_to_fill % 9
-            cell = self.board[row][col]
-
-            # Make random move for cell until valid move is made
-            moves = self.get_possible_moves(cell)
-            random.shuffle(moves)
-            while True:
-                num = moves.pop()
-                cell.value = num
-                if len(moves) == 0 or self.test_solve():
-                    break
 
     def get_board(self):
         '''Returns a list of values that are in the Sudoku board.'''
