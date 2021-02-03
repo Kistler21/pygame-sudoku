@@ -16,6 +16,7 @@ size = width, height
 white = 255, 255, 255
 black = 0, 0, 0
 gray = 200, 200, 200
+green = 0, 128, 0
 
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Sudoku')
@@ -94,17 +95,21 @@ def draw_grid():
 def fill_cells(cells, board):
     '''Fills in all the numbers for the game.'''
     font = pygame.font.Font(None, 36)
-    font.bold = True
 
+    # Fill in all cells with correct value
     for row in range(9):
         for col in range(9):
             if board.board[row][col].value is None:
                 continue
-            text = font.render(f'{board.board[row][col].value}', 1, black)
+            if not board.board[row][col].editable:
+                font.bold = True
+                text = font.render(f'{board.board[row][col].value}', 1, black)
+            else:
+                font.bold = False
+                text = font.render(f'{board.board[row][col].value}', 1, green)
             xpos, ypos = cells[row][col].center
-            xpos -= 6
-            ypos -= 10
-            screen.blit(text, (xpos, ypos))
+            textbox = text.get_rect(center=(xpos, ypos))
+            screen.blit(text, textbox)
 
 
 def play():
@@ -141,14 +146,43 @@ def play():
                             active_cell = cell
 
                 # Test if active cell is empty
-                if game.board[active_cell.row][active_cell.col].value is not None:
+                if not game.board[active_cell.row][active_cell.col].editable:
+                    active_cell = None
+
+            # Handle key press
+            if event.type == pygame.KEYUP:
+                if active_cell is not None:
+
+                    # Input number based on key press
+                    if event.key == pygame.K_0:
+                        game.board[active_cell.row][active_cell.col].value = 0
+                    if event.key == pygame.K_1:
+                        game.board[active_cell.row][active_cell.col].value = 1
+                    if event.key == pygame.K_2:
+                        game.board[active_cell.row][active_cell.col].value = 2
+                    if event.key == pygame.K_3:
+                        game.board[active_cell.row][active_cell.col].value = 3
+                    if event.key == pygame.K_4:
+                        game.board[active_cell.row][active_cell.col].value = 4
+                    if event.key == pygame.K_5:
+                        game.board[active_cell.row][active_cell.col].value = 5
+                    if event.key == pygame.K_6:
+                        game.board[active_cell.row][active_cell.col].value = 6
+                    if event.key == pygame.K_7:
+                        game.board[active_cell.row][active_cell.col].value = 7
+                    if event.key == pygame.K_8:
+                        game.board[active_cell.row][active_cell.col].value = 8
+                    if event.key == pygame.K_9:
+                        game.board[active_cell.row][active_cell.col].value = 9
+
+                    # Deselect cell
                     active_cell = None
 
         screen.fill(white)
         draw_grid()
-        fill_cells(cells, game)
         if active_cell is not None:
             pygame.draw.rect(screen, gray, active_cell)
+        fill_cells(cells, game)
         pygame.display.flip()
 
 

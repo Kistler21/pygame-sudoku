@@ -4,11 +4,12 @@ import random
 class Cell:
     '''Represents a cell within a game of Sudoku.'''
 
-    def __init__(self, row, col, value=None):
+    def __init__(self, row, col, value, editable):
         '''Initializes an instance of a Sudoku cell.'''
         self.row = row
         self.col = col
         self.value = value
+        self._editable = editable
 
     @property
     def row(self):
@@ -41,6 +42,11 @@ class Cell:
         '''Getter method for value.'''
         return self._value
 
+    @property
+    def editable(self):
+        '''Getter method for editable.'''
+        return self._editable
+
     def __repr__(self):
         return f'{self.__class__.__name__}({self.value})'
 
@@ -67,9 +73,11 @@ class Sudoku:
                 for col in range(9):
                     if board[row][col] == 0:
                         val = None
+                        editable = True
                     else:
                         val = board[row][col]
-                    self.board[row].append(Cell(row, col, val))
+                        editable = False
+                    self.board[row].append(Cell(row, col, val, editable))
 
     def check_move(self, cell, num):
         '''Returns whether a number is a valid move for a cell.'''
@@ -157,7 +165,8 @@ class Sudoku:
     def generate_board(self):
         '''Generates a random, solvable game of Sudoku.'''
         # Create list of open squares
-        self.board = [[Cell(row, col) for col in range(9)] for row in range(9)]
+        self.board = [[Cell(row, col, None, True)
+                       for col in range(9)] for row in range(9)]
 
         open_positions = [spot for spot in range(81)]
 
