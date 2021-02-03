@@ -15,6 +15,7 @@ height = cell_size*9 + minor_grid_size*6 + major_grid_size*4 + edge_buffer*2
 size = width, height
 white = 255, 255, 255
 black = 0, 0, 0
+gray = 200, 200, 200
 
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Sudoku')
@@ -93,6 +94,7 @@ def draw_grid():
 def fill_cells(cells, board):
     '''Fills in all the numbers for the game.'''
     font = pygame.font.Font(None, 36)
+    font.bold = True
 
     for row in range(9):
         for col in range(9):
@@ -120,15 +122,33 @@ def play():
     ]
     game = Sudoku(easy)
     cells = create_cells()
+    active_cell = None
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
 
+            # Handle mouse click
+            if event.type == pygame.MOUSEBUTTONUP:
+                mouse_pos = pygame.mouse.get_pos()
+
+                # Test if point in any rect
+                active_cell = None
+                for row in cells:
+                    for cell in row:
+                        if cell.collidepoint(mouse_pos):
+                            active_cell = cell
+
+                # Test if active cell is empty
+                if game.board[active_cell.row][active_cell.col].value is not None:
+                    active_cell = None
+
         screen.fill(white)
         draw_grid()
         fill_cells(cells, game)
+        if active_cell is not None:
+            pygame.draw.rect(screen, gray, active_cell)
         pygame.display.flip()
 
 
