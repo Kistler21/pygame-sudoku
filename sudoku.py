@@ -1,5 +1,6 @@
 import pygame
 import sys
+import time
 from solver import Cell, Sudoku
 
 
@@ -158,6 +159,46 @@ def draw_button(left, top, width, height, border, color, border_color, text):
     return button
 
 
+def draw_board(active_cell, cells, game):
+    '''Draws all elements making up the board.'''
+    # Draw grid and cells
+    draw_grid()
+    if active_cell is not None:
+        pygame.draw.rect(screen, gray, active_cell)
+
+    # Fill in cell values
+    fill_cells(cells, game)
+
+
+def visual_solve(game, cells):
+    '''Solves the game while giving a visual representation of what is being done.'''
+    cell = game.get_empty_cell()
+
+    # Solve is complete if cell is False
+    if not cell:
+        return True
+
+    # Check each possible move
+    for val in range(1, 10):
+
+        # Check if the value is a valid move
+        if not game.check_move(cell, val):
+            continue
+
+        # Place value in board
+        cell.value = val
+
+        # If all recursive calls return True then board is solved
+        if game.solve():
+            return True
+
+        # Undo move is solve was unsuccessful
+        cell.value = None
+
+    # No moves were successful
+    return False
+
+
 def play():
     '''Contains all the functionality for playing a game of Sudoku.'''
     easy = [
@@ -183,6 +224,14 @@ def play():
             # Handle mouse click
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_pos = pygame.mouse.get_pos()
+
+                # Reset button is pressed
+                if reset_btn.collidepoint(mouse_pos):
+                    game.reset()
+
+                # Solve button is pressed
+                if solve_btn.collidepoint(mouse_pos):
+                    visual_solve(game, cells)
 
                 # Test if point in any cell
                 active_cell = None
@@ -225,10 +274,8 @@ def play():
 
         screen.fill(white)
 
-        # Draw grid and cells
-        draw_grid()
-        if active_cell is not None:
-            pygame.draw.rect(screen, gray, active_cell)
+        # Draw board
+        draw_board(active_cell, cells, game)
 
         # Create buttons
         reset_btn = draw_button(
@@ -275,9 +322,6 @@ def play():
                 black,
                 'Solve'
             )
-
-        # Fill in cell values
-        fill_cells(cells, game)
 
         # Update screen
         pygame.display.flip()

@@ -62,7 +62,7 @@ class Cell:
 class Sudoku:
     '''Represents a game/board of Sudoku.'''
 
-    def __init__(self, board=None):
+    def __init__(self, board):
         '''Initializes an instance of a Sudoku game.'''
         self.board = []
         for row in range(9):
@@ -139,7 +139,7 @@ class Sudoku:
         '''
         cell = self.get_empty_cell()
 
-        # Board is complete if cell is false
+        # Board is complete if cell is False
         if not cell:
             return True
 
@@ -179,6 +179,13 @@ class Sudoku:
 
         return solvable
 
+    def reset(self):
+        '''Resets the game to its starting state.'''
+        for row in self.board:
+            for cell in row:
+                if cell.editable:
+                    cell.value = None
+
     def __str__(self):
         '''Returns a string representing the board.'''
         board = ' -----------------------\n'
@@ -199,8 +206,3 @@ class Sudoku:
                 board += '|-------|-------|-------|\n'
         board += ' -----------------------\n'
         return board
-
-
-if __name__ == '__main__':
-    s = Sudoku()
-    print(s)
