@@ -12,7 +12,7 @@ minor_grid_size = 1
 major_grid_size = 3
 buffer = 5
 button_height = 50
-button_width = 100
+button_width = 125
 button_border = 2
 width = cell_size*9 + minor_grid_size*6 + major_grid_size*4 + buffer*2
 height = cell_size*9 + minor_grid_size*6 + \
@@ -172,6 +172,7 @@ def draw_board(active_cell, cells, game):
 
 def visual_solve(game, cells):
     '''Solves the game while giving a visual representation of what is being done.'''
+    # Get first empty cell
     cell = game.get_empty_cell()
 
     # Solve is complete if cell is False
@@ -180,22 +181,43 @@ def visual_solve(game, cells):
 
     # Check each possible move
     for val in range(1, 10):
-
-        # Check if the value is a valid move
-        if not game.check_move(cell, val):
-            continue
+        # Allow game to quit when being solved
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
 
         # Place value in board
         cell.value = val
 
+        # Outline cell being changed in red
+        screen.fill(white)
+        draw_board(None, cells, game)
+        cell_rect = cells[cell.row][cell.col]
+        pygame.draw.rect(screen, red, cell_rect, 5)
+        pygame.display.update([cell_rect])
+        time.sleep(0.05)
+
+        # Check if the value is a valid move
+        if not game.check_move(cell, val):
+            cell.value = None
+            continue
+
         # If all recursive calls return True then board is solved
-        if game.solve():
+        screen.fill(white)
+        pygame.draw.rect(screen, green, cell_rect, 5)
+        draw_board(None, cells, game)
+        pygame.display.update([cell_rect])
+        if visual_solve(game, cells):
             return True
 
         # Undo move is solve was unsuccessful
         cell.value = None
 
     # No moves were successful
+    screen.fill(white)
+    pygame.draw.rect(screen, white, cell_rect, 5)
+    draw_board(None, cells, game)
+    pygame.display.update([cell_rect])
     return False
 
 
@@ -231,6 +253,29 @@ def play():
 
                 # Solve button is pressed
                 if solve_btn.collidepoint(mouse_pos):
+                    screen.fill(white)
+                    draw_board(active_cell, cells, game)
+                    reset_btn = draw_button(
+                        width - buffer - button_border*2 - button_width,
+                        height - button_height - button_border*2 - buffer,
+                        button_width,
+                        button_height,
+                        button_border,
+                        inactive_btn,
+                        black,
+                        'Reset'
+                    )
+                    solve_btn = draw_button(
+                        width - buffer*2 - button_border*4 - button_width*2,
+                        height - button_height - button_border*2 - buffer,
+                        button_width,
+                        button_height,
+                        button_border,
+                        inactive_btn,
+                        black,
+                        'Visual Solve'
+                    )
+                    pygame.display.flip()
                     visual_solve(game, cells)
 
                 # Test if point in any cell
@@ -296,7 +341,7 @@ def play():
             button_border,
             inactive_btn,
             black,
-            'Solve'
+            'Visual Solve'
         )
 
         # Check if mouse over either button
@@ -320,7 +365,7 @@ def play():
                 button_border,
                 active_btn,
                 black,
-                'Solve'
+                'Visual Solve'
             )
 
         # Update screen
