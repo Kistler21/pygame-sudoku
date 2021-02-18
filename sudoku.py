@@ -221,6 +221,39 @@ def visual_solve(game, cells):
     return False
 
 
+def check_sudoku(sudoku):
+    '''
+    Takes a complete instance of Soduku and 
+    returns whether or not the solution is valid.
+    '''
+    # Ensure all cells are filled
+    if sudoku.get_empty_cell():
+        raise ValueError('Game is not complete')
+
+    # Will hold values for each row, column, and box
+    row_sets = [set() for _ in range(9)]
+    col_sets = [set() for _ in range(9)]
+    box_sets = [set() for _ in range(9)]
+
+    # Check all rows, columns, and boxes contain no duplicates
+    for row in range(9):
+        for col in range(9):
+            box = (row // 3) * 3 + col // 3
+            value = sudoku.board[row][col].value
+
+            # Check if number already encountered in row, column, or box
+            if value in row_sets[row] or value in col_sets[col] or value in box_sets[box]:
+                return False
+
+            # Add value to corresponding set
+            row_sets[row].add(value)
+            col_sets[col].add(value)
+            box_sets[box].add(value)
+
+    # All rows, columns, and boxes are valid
+    return True
+
+
 def play():
     '''Contains all the functionality for playing a game of Sudoku.'''
     easy = [
@@ -237,6 +270,12 @@ def play():
     game = Sudoku(easy)
     cells = create_cells()
     active_cell = None
+    solve_rect = pygame.Rect(
+        buffer,
+        height-button_height - button_border*2 - buffer,
+        button_width + button_border*2,
+        button_height + button_border*2
+    )
 
     while True:
         for event in pygame.event.get():
@@ -367,6 +406,15 @@ def play():
                 black,
                 'Visual Solve'
             )
+
+        # Check if game is complete
+        if not game.get_empty_cell():
+            if check_sudoku(game):
+                # Set the text
+                font = pygame.font.Font(None, 36)
+                text = font.render('Solved!', 1, green)
+                textbox = text.get_rect(center=(solve_rect.center))
+                screen.blit(text, textbox)
 
         # Update screen
         pygame.display.flip()
