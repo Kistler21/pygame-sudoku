@@ -293,6 +293,7 @@ def play():
                 # Solve button is pressed
                 if solve_btn.collidepoint(mouse_pos):
                     screen.fill(white)
+                    active_cell = None
                     draw_board(active_cell, cells, game)
                     reset_btn = draw_button(
                         width - buffer - button_border*2 - button_width,
