@@ -24,7 +24,7 @@ py sudoku.py
 ```
 python3 sudoku.py
 ```
-<img src="./media/start_screen.png" width=50%><br>
+<img src="./media/start_screen.PNG" width=50%><br>
 ### Make a move:
 Click on a cell without a default value which will highlight the cell. Then simply enter a number with your keyboard. The number will show up as green if the move is a valid move based on the current numbers on the board or red if the move conflicts with an existing number. Note that a green number does not necessarily mean that the inputted number is the correct value for that cell. It simply means it is valid move based on the current board. Deleting a move can be done by pressing the Backspace or Delete key on a highlighted cell.<br>
 <img src="./media/number_change.gif" width=50%>
