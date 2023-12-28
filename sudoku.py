@@ -2,6 +2,7 @@ import pygame
 import sys
 import time
 from solver import Cell, Sudoku
+from board import Boards
 
 
 pygame.init()
@@ -256,18 +257,8 @@ def check_sudoku(sudoku):
 
 def play():
     '''Contains all the functionality for playing a game of Sudoku.'''
-    easy = [
-        [0, 0, 0, 9, 0, 0, 0, 3, 0],
-        [3, 0, 6, 0, 2, 0, 0, 4, 0],
-        [2, 0, 4, 0, 0, 3, 1, 0, 6],
-        [0, 7, 0, 0, 5, 1, 0, 8, 0],
-        [0, 3, 1, 0, 6, 0, 0, 5, 7],
-        [5, 0, 9, 0, 0, 0, 6, 0, 0],
-        [4, 1, 0, 0, 0, 2, 0, 7, 8],
-        [7, 6, 3, 0, 0, 5, 4, 0, 0],
-        [9, 2, 8, 0, 0, 4, 0, 0, 1]
-    ]
-    game = Sudoku(easy)
+    board = Boards()
+    game = Sudoku(board.get_rand_board())
     cells = create_cells()
     active_cell = None
     solve_rect = pygame.Rect(
